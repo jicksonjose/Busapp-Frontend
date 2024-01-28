@@ -4,48 +4,66 @@ import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
 const Login = () => {
 
-      //condition based routing
-       //condition based routing
-       const navigate = useNavigate()
-       const [inputField, SetInputField] = useState(
-           {
-               "email": "",
-               "password": ""
-           })
-   
-       const inputHandler = (event) => {
-           SetInputField({ ...inputField, [event.target.name]: event.target.value })
-       }
-   
-       const readValue = () => {
-           console.log(inputField)
-           axios.post("http://127.0.0.1:8000/users/login/", inputField).then((response) => {
-               //alert(response.data)
-               console.log(response.data)
-               if (response.data.length > 0){
-                   const getId = response.data[0].id
-                   const getName = response.data[0].name
-                   
-                   Swal.fire({
-                    icon: 'success',
-                    title: 'Login successful',
-                    text: `Welcome, ${getName}!`,
-                }).then(() => {
-                    sessionStorage.setItem("id", getId);
-                    sessionStorage.setItem("name", getName);
-                    navigate("/dashboard"); // Use the correct navigation function
-                });
-                   
-               }else{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid credentials',
-                    text: 'Please check your username or password.',
-                });
-               }
-           }) 
-           
-       }
+
+       const navigate = useNavigate();  // Use useNavigate hook from react-router-dom
+
+       const [inputField, setInputField] = useState({
+        email: '',
+        password: ''
+      });
+    
+      const [validationErrors, setValidationErrors] = useState({
+        email: '',
+        password: ''
+      });
+    
+      const inputHandler = (event) => {
+        setInputField({ ...inputField, [event.target.name]: event.target.value });
+        setValidationErrors({ ...validationErrors, [event.target.name]: '' });
+      };
+    
+      const readValue = () => {
+        let isValid = true;
+        const newValidationErrors = { email: '', password: '' };
+    
+        if (inputField.email.trim() === '') {
+          newValidationErrors.email = 'Please enter your username.';
+          isValid = false;
+        }
+    
+        if (inputField.password.trim() === '') {
+          newValidationErrors.password = 'Please enter your password.';
+          isValid = false;
+        }
+    
+        setValidationErrors(newValidationErrors);
+    
+        if (isValid) {
+          axios.post("http://127.0.0.1:8000/users/login/", inputField).then((response) => {
+            if (response.data.length > 0) {
+              const getId = response.data[0].id;
+              const getName = response.data[0].name;
+    
+              Swal.fire({
+                icon: 'success',
+                title: 'Login successful',
+                text: `Welcome, ${getName}!`,
+              }).then(() => {
+                sessionStorage.setItem("id", getId);
+                sessionStorage.setItem("name", getName);
+                navigate("/dashboard");
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Invalid credentials',
+                text: 'Please check your username or password.',
+              });
+            }
+          });
+        }
+    
+       };
     return (
 
         <div class="container">
@@ -62,14 +80,30 @@ const Login = () => {
                                    
                                         <div class="col-12">
                                             <label for="yourUsername" class="form-label">Username</label>
-                                                <input type="text" name="email" class="form-control" id="" required  value={inputField.email} onChange={inputHandler}/>
-                                                <div class="invalid-feedback">Please enter your username.</div>
+                                            <input
+                                                type="text"
+                                                name="email"
+                                                className={`form-control ${validationErrors.email && 'is-invalid'}`}
+                                                id="yourUsername"
+                                                required
+                                                value={inputField.email}
+                                                onChange={inputHandler}
+                                                />
+                                                <div className="invalid-feedback">{validationErrors.email}</div>
                                         </div>
 
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Password</label>
-                                            <input type="password" name="password" class="form-control" id="yourPassword" required  value={inputField.password} onChange={inputHandler}/>
-                                            <div class="invalid-feedback">Please enter your password!</div>
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                className={`form-control ${validationErrors.password && 'is-invalid'}`}
+                                                id="yourPassword"
+                                                required
+                                                value={inputField.password}
+                                                onChange={inputHandler}
+                                                />
+                                                <div className="invalid-feedback">{validationErrors.password}</div>
                                         </div>
 
                                         <div class="col-12">

@@ -1,191 +1,241 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import axios from 'axios'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
+const Login = () => {
 
-const Signup = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    username: '',
-    password: '',
-  });
 
-  const [formErrors, setFormErrors] = useState({});
+       const navigate = useNavigate();  // Use useNavigate hook from react-router-dom
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+       const [inputField, setInputField] = useState({
+        name :'',
+        phone:'',
+        email: '',
+        password: ''
+      });
+    
+      const [validationErrors, setValidationErrors] = useState({
+        name :'',
+        phone:'',
+        email: '',
+        password: ''
+      });
+    
+      const inputHandler = (event) => {
+        setInputField({ ...inputField, [event.target.name]: event.target.value });
+        setValidationErrors({ ...validationErrors, [event.target.name]: '' });
+      };
+    
+      const readValue = () => {
+        let isValid = true;
+        const newValidationErrors = {
+          name: '',
+          email: '',
+          phone: '',
+          username: '',
+          password: '',
+        };
+      
+        if (inputField.name.trim() === '') {
+          newValidationErrors.name = 'Please enter your name.';
+          isValid = false;
+        }
+      
+        if (!/^[A-Za-z\s]+$/.test(inputField.name.trim())) {
+          newValidationErrors.name = 'Please enter a valid name (only alphabets)';
+          isValid = false;
+        }
+     
+        if (inputField.email.trim() === '') {
+          newValidationErrors.email = 'Please enter your email.';
+          isValid = false;
+        } else if (!/^[a-zA-Z0-9._-]+@gmail\.com$/.test(inputField.email.trim())) {
+          newValidationErrors.email = 'Please enter a valid Gmail address';
+          isValid = false;
+        }
+            
+        // Add email format validation here if needed
+      
+        if (inputField.phone.trim() === '') {
+          newValidationErrors.phone = 'Please enter your phone.';
+          isValid = false;
+        } else if (!/^\d{10}$/.test(inputField.phone.trim())) {
+          newValidationErrors.phone = 'Please enter a valid 10-digit phone number';
+          isValid = false;
+        }
+      
+        // Add phone format validation here if needed
+      
+        if (inputField.password.trim() === '') {
+          newValidationErrors.password = 'Please enter your password.';
+          isValid = false;
+        }
+      
+        setValidationErrors(newValidationErrors);
+      
+        if (isValid) {
+          // Check if email already exists
+          axios.get(`http://127.0.0.1:8000/users/get_email/${inputField.email}/`)
+            .then((emailResponse) => {
+              if (emailResponse.data.exists) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Email already exists',
+                  text: 'please change your enail.',
+                }).then(() => {
+                  navigate("/signup");  // Assuming you have a login route
+                });
+              } else {
+                // Check if phone number already exists
+                axios.get(`http://127.0.0.1:8000/users/check_phone/${inputField.phone}/`)
+                  .then((phoneResponse) => {
+                    if (phoneResponse.data.exists) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Phone number already exists',
+                        text: 'please change you phone number.',
+                      }).then(() => {
+                        navigate("/signup");  // Assuming you have a login route
+                      });
+                    } else {
+                      // If neither email nor phone exists, proceed with signup
+                      axios.post("http://127.0.0.1:8000/users/signup/", inputField)
+                        .then((response) => {
+                          if (response.data.status === 'added') {
+                            Swal.fire({
+                              icon: 'success',
+                              title: 'Account created successfully',
+                              text: 'You can now log in with your credentials.',
+                            }).then(() => {
+                              navigate("/");  // Assuming you have a login route
+                            });
+                          } 
+                        })
+                        .catch((error) => {
+                          console.error('Axios error:', error);
+                          // Handle other errors if needed
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'There was an unexpected error. Please try again later.',
+                          });
+                        });
+                    }
+                  })
+                  .catch((error) => {
+                    console.error('Axios error:', error);
+                    // Handle other errors if needed
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error',
+                      text: 'There was an unexpected error. Please try again later.',
+                    });
+                  });
+              }
+            })
+            .catch((error) => {
+              console.error('Axios error:', error);
+              // Handle other errors if needed
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'There was an unexpected error. Please try again later.',
+              });
+            });
+        }
+      };
+    return (
 
-    // Clear validation error when the user starts typing
-    setFormErrors({
-      ...formErrors,
-      [name]: '',
-    });
-  };
+        <div class="container">
+            <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                            <div class="card mb-4" style={{ width: '350px' }}>
+                                <div class="card-body">
+                                    <div class="pt-4 pb-4">
+                                        <h5 class="card-title text-center pb-0 fs-4">Create Your Account</h5>
+                           
+                                    </div>
+                                      <div class="col-12">
+                                            <label for="yourUsername" class="form-label">Name</label>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                className={`form-control ${validationErrors.name && 'is-invalid'}`}
+                                                id="yourUsername"
+                                                required
+                                                value={inputField.name}
+                                                onChange={inputHandler}
+                                                />
+                                                <div className="invalid-feedback">{validationErrors.name}</div>
+                                        </div>
+                                      <div class="col-12">
+                                            <label for="yourUsername" class="form-label">Email</label>
+                                            <input
+                                                type="text"
+                                                name="email"
+                                                className={`form-control ${validationErrors.email && 'is-invalid'}`}
+                                                id="yourUsername"
+                                                required
+                                                value={inputField.email}
+                                                onChange={inputHandler}
+                                                />
+                                                <div className="invalid-feedback">{validationErrors.email}</div>
+                                        </div>
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    // Validate the form
-    const errors = {};
+                                   
+                                        <div class="col-12">
+                                            <label for="yourUsername" class="form-label">Phone</label>
+                                            <input
+                                                type="text"
+                                                name="phone"
+                                                maxLength={10}
+                                                className={`form-control ${validationErrors.phone && 'is-invalid'}`}
+                                                id="yourUsername"
+                                                required
+                                                value={inputField.phone}
+                                                onChange={inputHandler}
+                                                />
+                                                <div className="invalid-feedback">{validationErrors.phone}</div>
+                                        </div>
 
-    // Name validation: Only alphabets
-    if (!/^[A-Za-z\s]+$/.test(formData.name.trim())) {
-      errors.name = 'Please enter a valid name (only alphabets)';
-    }
+                                        <div class="col-12">
+                                            <label for="yourPassword" class="form-label">Password</label>
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                className={`form-control ${validationErrors.password && 'is-invalid'}`}
+                                                id="yourPassword"
+                                                required
+                                                value={inputField.password}
+                                                onChange={inputHandler}
+                                                />
+                                                <div className="invalid-feedback">{validationErrors.password}</div>
+                                        </div>
 
-    // Email validation: Must satisfy the pattern for Gmail
-    if (!/^[a-zA-Z0-9._-]+@gmail\.com$/.test(formData.email.trim())) {
-      errors.email = 'Please enter a valid Gmail address';
-    }
+                                        <div class="col-12">
 
-    // Phone number validation: Must be a 10-digit number
-    if (!/^\d{10}$/.test(formData.phone.trim())) {
-      errors.phone = 'Please enter a valid 10-digit phone number';
-    }
-
-    // Username validation: Non-empty
-    if (!formData.username.trim()) {
-      errors.username = 'Please choose a username';
-    }
-
-    // Password validation: Non-empty
-    if (!formData.password.trim()) {
-      errors.password = 'Please enter your password';
-    }
-
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-    } else {
-      // Perform form submission logic here
-      console.log('Form submitted:', formData);
-    }
-  };
-
-  return (
-
-    <>
-      <main>
-        <div className="container">
-          <section className="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-            <div className="container">
-              <div className="row justify-content-center">
-                <div className="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                  <div className="card mb-3">
-                    <div className="card-body">
-                      <div className="pt-4 pb-2">
-                        <h5 className="card-title text-center pb-0 fs-4">Create an Account</h5>
-                        <p className="text-center small">Enter your personal details to create an account</p>
-                      </div>
-
-                      <form className="row g-3 needs-validation" noValidate onSubmit={handleSubmit}>
-                        <div className="col-12">
-                          <label htmlFor="yourName" className="form-label">
-                            Your Name
-                          </label>
-                          <input
-                            type="text"
-                            name="name"
-                            className={`form-control ${formErrors.name ? 'is-invalid' : ''}`}
-                            id="yourName"
-                            onChange={handleChange}
-                            required
-                          />
-                          <div className="invalid-feedback">{formErrors.name}</div>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <button class="btn btn-primary w-100" onClick={readValue}>Create an Account</button>
+                                            {/* <Link to='/dashboard'>Dashboard</Link> */}
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <p class="small mb-0">Don't have account? 
+                                            <Link to="/">Log In</Link></p>
+                                        </div>
+                                 
+                                </div>
+                            </div>
                         </div>
-
-                        <div className="col-12">
-                          <label htmlFor="yourEmail" className="form-label">
-                            Your Email
-                          </label>
-                          <input
-                            type="email"
-                            name="email"
-                            className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
-                            id="yourEmail"
-                            onChange={handleChange}
-                            required
-                          />
-                          <div className="invalid-feedback">{formErrors.email}</div>
-                        </div>
-
-                        <div className="col-12">
-                          <label htmlFor="yourPhone" className="form-label">
-                            Your Phone
-                          </label>
-                          <input
-                            type="tel"
-                            name="phone"
-                            maxlength="10"
-                            className={`form-control ${formErrors.phone ? 'is-invalid' : ''}`}
-                            id="yourPhone"
-                            onChange={handleChange}
-                            required
-                          />
-                          <div className="invalid-feedback">{formErrors.phone}</div>
-                        </div>
-
-                        <div className="col-12">
-                          <label htmlFor="yourUsername" className="form-label">
-                            Username
-                          </label>
-                          <div className="input-group has-validation">
-                            <span className="input-group-text" id="inputGroupPrepend">
-                              @
-                            </span>
-                            <input
-                              type="text"
-                              name="username"
-                              className={`form-control ${formErrors.username ? 'is-invalid' : ''}`}
-                              id="yourUsername"
-                              onChange={handleChange}
-                              required
-                            />
-                            <div className="invalid-feedback">{formErrors.username}</div>
-                          </div>
-                        </div>
-
-                        <div className="col-12">
-                          <label htmlFor="yourPassword" className="form-label">
-                            Password
-                          </label>
-                          <input
-                            type="password"
-                            name="password"
-                            className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
-                            id="yourPassword"
-                            onChange={handleChange}
-                            required
-                          />
-                          <div className="invalid-feedback">{formErrors.password}</div>
-                        </div>
-
-                        <div className="col-12"></div>
-                        <div className="col-12">
-                          <button className="btn btn-primary w-100" type="submit">
-                            Create Account
-                          </button>
-                        </div>
-                        <div className="col-12">
-                          <p className="small mb-0">
-                            Already have an account? <Link to="/">Log in</Link>
-                          </p>
-                        </div>
-                      </form>
                     </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-          </section>
+            </section>
         </div>
-      </main>
-    </>
 
-  );
-};
+    )
+}
 
-export default Signup;
+export default Login

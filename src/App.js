@@ -32,9 +32,6 @@ function App() {
       <Route path='/add-bus-points' element={<AddBusPoint/>}></Route>
       <Route path='/signup' element={<Signup/>}></Route>
       <Route path='/busdocuments' element={<BusDocuments/>}></Route>
-
-      
-
     </Routes>
     </BrowserRouter>
   );
