@@ -71,7 +71,7 @@ const Login = () => {
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                            <div class="card mb-4" style={{ width: '350px' }}>
+                            <div class="card mb-4" style={{ width: '450px' }}>
                                 <div class="card-body">
                                     <div class="pt-4 pb-4">
                                         <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>

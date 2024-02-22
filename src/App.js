@@ -14,6 +14,9 @@ import AddBusRoutes from './components/AddBusRoutes';
 import BusPoint from './components/BusPoint';
 import Signup from './components/Signup';
 import BusDocuments from './components/BusDocuments';
+import Otp from './components/Otp';
+import { BusSchedule } from './components/BusSchedule';
+import Schedule from './components/Schedule';
 
 function App() {
   return (
@@ -32,6 +35,10 @@ function App() {
       <Route path='/add-bus-points' element={<AddBusPoint/>}></Route>
       <Route path='/signup' element={<Signup/>}></Route>
       <Route path='/busdocuments' element={<BusDocuments/>}></Route>
+      <Route path='/otp' element={<Otp/>}></Route>
+      <Route path='/busschedule' element={<BusSchedule/>}></Route>
+      <Route path='/addschedule' element={<Schedule/>}></Route>
+
     </Routes>
     </BrowserRouter>
   );

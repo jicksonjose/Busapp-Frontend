@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Navbar = () => {
+
+    const sessionName = sessionStorage.getItem('name');
     return (
         <>
             <header id="header"  class="header fixed-top d-flex align-items-center">
@@ -170,14 +172,14 @@ const Navbar = () => {
                         <li  class="nav-item dropdown pe-3">
 
                             <a  class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                                <img src="assets/img/profile-img.jpg" alt="Profile"  class="rounded-circle" />
-                                <span  class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+                                <img src="" alt=""  class="rounded-circle" />
+                                <span  class="d-none d-md-block dropdown-toggle ps-2">{sessionName}</span>
                             </a>
 
                             <ul  class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                                 <li  class="dropdown-header">
-                                    <h6>Kevin Anderson</h6>
-                                    <span>Web Designer</span>
+                                    <h6>{sessionName}</h6>
+                                    <span>Bus Owner</span>
                                 </li>
                                 <li>
                                     <hr  class="dropdown-divider" />
@@ -223,14 +225,7 @@ const Navbar = () => {
                     </li>
 
 
-                    <li class="nav-item">
-                        <Link class="nav-link collapsed" to="/busdocuments">
-                            <i class="bi bi-person"></i>
-                            <span>Bus Documents</span>
-                    </Link>
-                    </li>
 
-                    <li class="nav-heading">If user Approved</li>
 
                     <li class="nav-item">
                         <Link class="nav-link collapsed" to="/busdetails">
@@ -238,19 +233,21 @@ const Navbar = () => {
                             <span>Bus Details</span>
                         </Link>
                     </li>
-                    <li class="nav-item">
-                           <Link class="nav-link collapsed" to="/busfeature">
-                            <i class="bi bi-card-text"></i>
-                            <span>Bus Feature</span>
-                            </Link>
-                     
-                    </li>
+
                     <li class="nav-item">
                     <Link class="nav-link collapsed" to="/bus-route">
                             <i class="bi bi-card-text"></i>
                             <span>Bus Route</span>
                       </Link>
                     </li>
+
+                    <li class="nav-item">
+                    <Link class="nav-link collapsed" to="/addschedule">
+                            <i class="bi bi-card-text"></i>
+                            <span>Bus Schedule</span>
+                      </Link>
+                    </li>
+
                     <li class="nav-item">
                     <Link class="nav-link collapsed" to="/bus-points">
                             <i class="bi bi-card-text"></i>

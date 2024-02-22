@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from './Navbar'
 import { Link } from 'react-router-dom'
 
-const BusRoute = () => {
+export const BusSchedule = () => {
   return (
     <>
     <Navbar></Navbar>
@@ -20,7 +20,7 @@ const BusRoute = () => {
            
         </div>
         <div className='mb-3'>
-        <Link to="/add-bus-route" className='btn btn-primary mt-2'>Add Bus Route</Link>
+        <Link to="/addschedule" className='btn btn-primary mt-2'>Add Bus Schedule</Link>
         </div>
           
       
@@ -29,15 +29,15 @@ const BusRoute = () => {
               <div class="col-lg-12">
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Bus Routes</h5>
+                    <h5 class="card-title">Bus Schedule</h5>
                     <table class="table datatable">
                       <thead>
                         <tr>
                           <th> No</th>
-                          <th>Route</th>
-                          <th>Starting Point</th>
-                          <th>Destination Point</th>
-                          <th>Price</th>
+                          <th>Bus Name</th>
+                          <th>Bus Route</th>
+                          <th>Date</th>
+                          
                         </tr>
                       </thead>
                      
@@ -55,5 +55,3 @@ const BusRoute = () => {
     </>
   )
 }
-
-export default BusRoute

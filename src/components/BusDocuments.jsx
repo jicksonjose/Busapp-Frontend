@@ -14,9 +14,9 @@ const BusDocuments = () => {
 </div>
 <section class="section dashboard mt-3">
     <div class="row">
-        <div class="col-md-6 col-lg-6 col-sm-6">
+        <div class="col-md-6 col-lg-6 col-sm-6 d-flex">
             <div class="card" >
-                <img src="..." class="card-img-top" alt="img"/>
+                <img src="https://media.istockphoto.com/id/135327019/photo/white-passenger-bus.jpg?s=612x612&w=0&k=20&c=sRU5BpOsY6fyYj9pMiAxz0dLML--uoNl7rIXelRbFnc=" class="card-img-top" alt="img"/>
                 <div class="card-body">
                     <h5 class="card-title">Bus Names</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk
@@ -36,9 +36,9 @@ const BusDocuments = () => {
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-lg-6 col-sm-6">
+        <div class="col-md-6 col-lg-6 col-sm-6 d-flex">
             <div class="card" >
-                <img src="..." class="card-img-top" alt="img"/>
+                <img src="https://svmchaser.files.wordpress.com/2015/02/c6f67-11004312_688275707947991_663692788_n.jpg?w=640&h=480" class="card-img-top" alt="img"/>
                 <div class="card-body">
                     <h5 class="card-title">Bus Name</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk

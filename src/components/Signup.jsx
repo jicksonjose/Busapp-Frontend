@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
-const Login = () => {
+const Signup = () => {
 
 
        const navigate = useNavigate();  // Use useNavigate hook from react-router-dom
@@ -99,15 +99,29 @@ const Login = () => {
                       });
                     } else {
                       // If neither email nor phone exists, proceed with signup
+                      // axios.post("http://127.0.0.1:8000/users/signup/", inputField)
                       axios.post("http://127.0.0.1:8000/users/signup/", inputField)
                         .then((response) => {
                           if (response.data.status === 'added') {
+                            sessionStorage.setItem('userName', inputField.name);
+                            sessionStorage.setItem('userEmail', inputField.email);
+                            sessionStorage.setItem('userPhone', inputField.phone);
+                            sessionStorage.setItem('password', inputField.password);
+
+                                  // Print session data to the console
+                            console.log('Session Data:', {
+                              userName: sessionStorage.getItem('userName'),
+                              userEmail: sessionStorage.getItem('userEmail'),
+                              userPhone: sessionStorage.getItem('userPhone'),
+                              password: sessionStorage.getItem('password'),
+                            });
+                        
                             Swal.fire({
                               icon: 'success',
                               title: 'Account created successfully',
                               text: 'You can now log in with your credentials.',
                             }).then(() => {
-                              navigate("/");  // Assuming you have a login route
+                              navigate("/otp");  // Assuming you have a login route
                             });
                           } 
                         })
@@ -151,7 +165,7 @@ const Login = () => {
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                            <div class="card mb-4" style={{ width: '350px' }}>
+                            <div class="card mb-4" style={{ width: '450px' }}>
                                 <div class="card-body">
                                     <div class="pt-4 pb-4">
                                         <h5 class="card-title text-center pb-0 fs-4">Create Your Account</h5>
@@ -238,4 +252,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Signup
